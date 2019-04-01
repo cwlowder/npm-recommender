@@ -27,6 +27,7 @@ def extract_package_json(package_json, q, seen):
 				data['repository'] = package_json['versions'][latest]['repository']['url']
 	except Exception  as e:
 		print("Error trying to parse ->", e)
+		return None
 
 	# extract dependencies
 	if 'dependencies' in package_json['versions'][latest]:
@@ -49,7 +50,7 @@ def extract_package_json(package_json, q, seen):
 					q.put(dep)
 	return data
 
-def crawl_npm(seed_list, max_size=2000):
+def crawl_npm(seed_list, max_size=200000):
 	seen = set({})
 	q = Queue()
 	npm_registry = 'http://registry.npmjs.com/'
@@ -77,17 +78,21 @@ def crawl_npm(seed_list, max_size=2000):
 			print('The package', package, 'is not found')
 			continue
 
-		data_package = extract_package_json(package_json, q, seen)
-		if data_package is not None:
-			data[package] = data_package
-		else:
-			# Failed packages should not count towards limit
+		try:
+			data_package = extract_package_json(package_json, q, seen)
+			if data_package is not None:
+				data[package] = data_package
+			else:
+				# Failed packages should not count towards limit
+				counter -= 1
+		except:
+			# Skip any fails
 			counter -= 1
 	return data
 
 if __name__ == "__main__":
-	data = crawl_npm(['express','chalk','supertest'])
+	data = crawl_npm(['express','chalk','supertest', '@prairielearn/prairielib', "ghost"])
 	print("Found", len(data), "packages")
-	with open('data.json', 'w') as outfile:
+	with open('data2.json', 'w') as outfile:
 		json.dump(data, outfile)
 	#print(json.dumps(data, indent=4, sort_keys=True))
