@@ -21,7 +21,7 @@ def extract_package_json(package_json, q, seen):
 
 		if 'repository' in package_json['versions'][latest]:
 			# Handle different implementations of repository
-			if isinstance(package_json['versions'][latest]['repository']['url'], str):
+			if isinstance(package_json['versions'][latest]['repository'], str):
 				data['repository'] = package_json['versions'][latest]['repository']
 			else:	
 				data['repository'] = package_json['versions'][latest]['repository']['url']
@@ -49,7 +49,7 @@ def extract_package_json(package_json, q, seen):
 					q.put(dep)
 	return data
 
-def crawl_npm(seed_list, max_size=20):
+def crawl_npm(seed_list, max_size=2000):
 	seen = set({})
 	q = Queue()
 	npm_registry = 'http://registry.npmjs.com/'
@@ -80,11 +80,14 @@ def crawl_npm(seed_list, max_size=20):
 		data_package = extract_package_json(package_json, q, seen)
 		if data_package is not None:
 			data[package] = data_package
+		else:
+			# Failed packages should not count towards limit
+			counter -= 1
 	return data
 
 if __name__ == "__main__":
 	data = crawl_npm(['express','chalk','supertest'])
 	print("Found", len(data), "packages")
-	with open('data2.json', 'w') as outfile:
+	with open('data.json', 'w') as outfile:
 		json.dump(data, outfile)
 	#print(json.dumps(data, indent=4, sort_keys=True))
