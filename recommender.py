@@ -144,22 +144,9 @@ if __name__ == '__main__':
             "tmp": "0.0.33"
         }.keys())
 
+
     deps = set({
-        "copy-paste": "^1.3.0",
-        "del": "^3.0.0",
-        "electron-prompt": "^1.3.0",
-        "html2canvas": "^1.0.0-alpha.12",
-        "mime-types": "^2.1.22",
-        "now": "^14.0.0",
-        "video-stream-merger": "^3.0.2",
-        "babel-eslint": "^10.0.1",
-        "eslint": "^5.14.1",
-        "eslint-config-prettier": "^4.0.0",
-        "eslint-plugin-prettier": "^3.0.1",
-        "fast-deep-equal": "^2.0.1",
-        "husky": "^1.3.1",
-        "lint-staged": "^8.1.4",
-        "prettier": "^1.16.4"
+        "mocha": "ad",
     }.keys())
     pkg = {
         'name': 'hyper-orama',

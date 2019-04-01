@@ -2,6 +2,7 @@ from queue import Queue
 import urllib.request as request
 import urllib.error
 import json
+import time
 
 def extract_package_json(package_json, q, seen):
 	latest = package_json["dist-tags"]['latest']
@@ -11,8 +12,12 @@ def extract_package_json(package_json, q, seen):
 		'deps': []
 	}
 
-	# Add useful information
 	try:
+		#skip depricated packages
+		if 'depricated' in package_json['versions'][latest]:
+			return None
+
+		# Add useful information
 		if 'keywords' in package_json['versions'][latest]:
 			data['keywords'] = package_json['versions'][latest]['keywords']
 
@@ -66,16 +71,21 @@ def crawl_npm(seed_list, max_size=200000):
 		if package in seen:
 			continue
 
+		# sleep after every 100 downloads
+		if counter % 100 == 0:
+			print("Sleeping...")
+			time.sleep(10)
+
 		print("{:6d} {:6d}".format(counter, q.qsize()),package)
 		
 		counter += 1
 		seen.add(package)
 
 		try:
-			f = request.urlopen(npm_registry + package)
+			f = request.urlopen(npm_registry + package, timeout=10)
 			package_json = json.load(f)
 		except urllib.error.HTTPError as e:
-			print('The package', package, 'is not found')
+			print('The package', package, 'is not found', str(e))
 			continue
 
 		try:
