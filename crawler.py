@@ -26,7 +26,7 @@ def extract_package_json(package_json, q, seen):
 			else:	
 				data['repository'] = package_json['versions'][latest]['repository']['url']
 	except Exception  as e:
-		print("Error trying to parse", package, "->", e)
+		print("Error trying to parse ->", e)
 
 	# extract dependencies
 	if 'dependencies' in package_json['versions'][latest]:
