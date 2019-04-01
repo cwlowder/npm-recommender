@@ -16,12 +16,21 @@ class Recommender:
         ntor = 0.0
         dtor_a = 0.0
         dtor_b = 0.0
+        deps = pkg_a['deps'] | pkg_b['deps']
         for j in pkg_a['deps'] | pkg_b['deps']:
             x_aj = 1 if (j in pkg_a['deps']) else 0
             x_bj = 1 if (j in pkg_b['deps']) else 0
             ntor += (x_aj - pkg_a['n']) * (x_bj - pkg_b['n'])
             dtor_a += (x_aj - pkg_a['n']) ** 2
             dtor_b += (x_bj - pkg_b['n']) ** 2
+        # number of packages that are not dependencies
+        not_deps = len(self.packages) - len(deps)
+
+        # update numbers for non dependencies
+        ntor += not_deps * (pkg_a['n']) * (pkg_b['n'])
+        dtor_a += not_deps*(pkg_a['n']) ** 2
+        dtor_b += not_deps*(pkg_b['n']) ** 2
+    
         dtor = sqrt(dtor_a * dtor_b) + 0.0001
         return ntor / dtor
 
