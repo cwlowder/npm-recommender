@@ -41,6 +41,7 @@ class Recommender:
         pkg['deps'] = set(pkg['deps'])
         # Loop through objects
         counter = 0
+        sims_cache = {}
         for j in self.packages:
             ntor = 0.0
             dtor = 0.0001
@@ -51,15 +52,16 @@ class Recommender:
             # Loop through users
             for i in self.packages:
                 x_ij = 1 if (j in self.data[i]['deps']) else 0
-                sim = self.similarity(self.data[i], pkg)
-                ntor += sim * (x_ij - self.data[i]['n'])
-                dtor += sim
+                if i not in sims_cache:
+                    sims_cache[i] = self.similarity(self.data[i], pkg)
+                ntor += sims_cache[i] * (x_ij - self.data[i]['n'])
+                dtor += sims_cache[i]
             recs[j] = ntor / dtor
         recs = {i : recs[i] + n_a for i in self.packages}
         return recs
 
 if __name__ == '__main__':
-    f = open('data.json', 'r')
+    f = open('dataAll.json', 'r')
     r = Recommender(f)
     deps = set({
             "@prairielearn/prairielib": "^1.5.2",
@@ -146,10 +148,15 @@ if __name__ == '__main__':
 
 
     deps = set({
-        "mocha": "ad",
-    }.keys())
+     "eslint",
+     "coveralls",
+     "nyc",
+     "prettier",
+     "istanbul",
+     "tape"
+    })
     pkg = {
-        'name': 'hyper-orama',
+        'name': 'test',
         'deps': deps
     }
     recs = r.recommend(pkg)
