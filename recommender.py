@@ -1,11 +1,22 @@
 from math import sqrt
 import json
 import sys
+import multiprocessing as mp
+
+def _chunkIt(seq, num):
+    avg = len(seq) / float(num)
+    out = []
+    last = 0.0
+    while last < len(seq):
+        out.append(seq[int(last):int(last + avg)])
+        last += avg
+    return out
 
 class Recommender:
-    def __init__(self, data_source):
+    def __init__(self, data_source, processes=4):
         self.data = json.load(data_source)
         self.packages = self.data.keys()
+        self.processes = processes
         for p in self.packages:
             self.data[p]['deps'] = set(self.data[p]['deps'])
             # Percent of dependencies for this package versus all packages
@@ -30,18 +41,18 @@ class Recommender:
         ntor += not_deps * (pkg_a['n']) * (pkg_b['n'])
         dtor_a += not_deps*(pkg_a['n']) ** 2
         dtor_b += not_deps*(pkg_b['n']) ** 2
-    
+
         dtor = sqrt(dtor_a * dtor_b) + 0.0001
         return ntor / dtor
 
-    def recommend(self, pkg):
-        recs = {i : 0 for i in self.packages}
-        n_a = len(pkg['deps']) / len(self.packages)
-        pkg['n'] = n_a
-        pkg['deps'] = set(pkg['deps'])
+    def recommend_job(self, pkg, packages={}, sims_cache={}, ret=None):
+        if ret == None:
+            raise Error("Must define return method for each ")
+        print("Started Job")
+        recs = {i : 0 for i in packages}
+        n_a = pkg['n']
         # Loop through objects
         counter = 0
-        sims_cache = {}
         for j in self.packages:
             ntor = 0.0
             dtor = 0.0001
@@ -50,19 +61,45 @@ class Recommender:
                 sys.stdout.flush()
             counter += 1
             # Loop through users
-            for i in self.packages:
+            for i in packages:
                 x_ij = 1 if (j in self.data[i]['deps']) else 0
-                if i not in sims_cache:
-                    sims_cache[i] = self.similarity(self.data[i], pkg)
                 ntor += sims_cache[i] * (x_ij - self.data[i]['n'])
                 dtor += sims_cache[i]
             recs[j] = ntor / dtor
-        recs = {i : recs[i] + n_a for i in self.packages}
-        return recs
+        recs = {i : recs[i] + n_a for i in packages}
+        print("Finished Job")
+        ret.put(recs)
+        return
 
+    def recommend(self, pkg):
+        n_a = len(pkg['deps']) / len(self.packages)
+        pkg['n'] = n_a
+        pkg['deps'] = set(pkg['deps'])
+
+        # Build up similarity cache
+        sims_cache = {}
+        for i in self.packages:
+            sims_cache[i] = self.similarity(self.data[i], pkg)
+
+        jobs = []
+
+        packages = _chunkIt(list(self.packages), self.processes)
+
+        for job_id in range(0, self.processes):
+            q = mp.Queue()
+            process = mp.Process(target=self.recommend_job,
+                                                args=(pkg, packages[job_id], sims_cache, q))
+            process.start()
+            jobs.append((q, process))
+
+        recs = {}
+        for q, j in jobs:
+            recs.update(q.get())
+            j.join()
+        return recs
 if __name__ == '__main__':
     f = open('dataAll.json', 'r')
-    r = Recommender(f)
+    r = Recommender(f, processes=4)
     deps = set({
             "@prairielearn/prairielib": "^1.5.2",
             "ace-builds": "^1.4.2",
