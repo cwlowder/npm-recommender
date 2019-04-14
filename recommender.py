@@ -53,7 +53,7 @@ class Recommender:
         n_a = pkg['n']
         # Loop through objects
         counter = 0
-        for j in self.packages:
+        for j in packages:
             ntor = 0.0
             dtor = 0.0001
             if counter % 10 == 0:
@@ -61,7 +61,7 @@ class Recommender:
                 sys.stdout.flush()
             counter += 1
             # Loop through users
-            for i in packages:
+            for i in self.packages:
                 x_ij = 1 if (j in self.data[i]['deps']) else 0
                 ntor += sims_cache[i] * (x_ij - self.data[i]['n'])
                 dtor += sims_cache[i]
