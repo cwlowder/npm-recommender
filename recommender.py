@@ -3,6 +3,14 @@ import json
 import sys
 import multiprocessing as mp
 
+def _progBar(count, max_count, l=30, u=100):
+    if count%u != 0 or count == 0:
+        return
+    prog = 1+int(l*(count/float(max_count)))
+    prog_left = l - prog
+    sys.stdout.write("|" + u"\u2588"*prog + u"\u2591"*prog_left + "|\r")
+    sys.stdout.flush()
+
 def _chunkIt(seq, num):
     avg = len(seq) / float(num)
     out = []
@@ -48,7 +56,7 @@ class Recommender:
     def recommend_job(self, pkg, packages={}, sims_cache={}, ret=None):
         if ret == None:
             raise Error("Must define return method for each ")
-        print("Started Job")
+        print("Started New Job")
         recs = {i : 0 for i in packages}
         n_a = pkg['n']
         # Loop through objects
@@ -56,9 +64,7 @@ class Recommender:
         for j in packages:
             ntor = 0.0
             dtor = 0.0001
-            if counter % 10 == 0:
-                sys.stdout.write('Counter: ' + str(counter) + ' \r')
-                sys.stdout.flush()
+            _progBar(counter, len(packages))
             counter += 1
             # Loop through users
             for i in self.packages:
@@ -183,14 +189,7 @@ if __name__ == '__main__':
             "tmp": "0.0.33"
         }.keys())
 
-
     deps = set({
-     "eslint",
-     "coveralls",
-     "nyc",
-     "prettier",
-     "istanbul",
-     "tape"
     })
     pkg = {
         'name': 'test',
