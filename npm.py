@@ -122,9 +122,8 @@ def crawl_npm(seed_list, max_size=200000):
 		counter += 1
 
 		try:
-			f = request.urlopen(npm_registry + package, timeout=10)
-			print(type(f))
-			package_json = json.load(f)
+			r = request.urlopen(npm_registry + package, timeout=10)
+			package_json = json.loads(r.read().decode(r.info().get_param('charset') or 'utf-8'))
 		except urllib.error.HTTPError as e:
 			print('The package', package, 'is not found', str(e))
 			continue

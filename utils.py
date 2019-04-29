@@ -1,4 +1,4 @@
-import sys, re
+import sys, re, json
 
 def _progBar(count, max_count, l=30, u=100):
     if count%u != 0:
@@ -25,3 +25,19 @@ def loadFile(filePath):
         for line in file:
             out.append(line)
     return out
+
+def loadJSON(filePath):
+    out = ""
+    with open(filePath, "r") as file:
+        for line in file:
+            out += line
+    return json.loads(out)
+
+def saveFile(filePath, out):
+    with open(filePath, "w") as file:
+        for line in out:
+            file.write(''.join(json.dumps(line).split()) + '\n')
+
+def saveJSON(filePath, out):
+    with open(filePath, "w") as file:
+        file.write(''.join(json.dumps(out).split()) + '\n')
