@@ -3,22 +3,7 @@ import json
 import sys
 import multiprocessing as mp
 
-def _progBar(count, max_count, l=30, u=100):
-    if count%u != 0 or count == 0:
-        return
-    prog = 1+int(l*(count/float(max_count)))
-    prog_left = l - prog
-    sys.stdout.write("|" + u"\u2588"*prog + u"\u2591"*prog_left + "|\r")
-    sys.stdout.flush()
-
-def _chunkIt(seq, num):
-    avg = len(seq) / float(num)
-    out = []
-    last = 0.0
-    while last < len(seq):
-        out.append(seq[int(last):int(last + avg)])
-        last += avg
-    return out
+from utils import _progBar, _chunkIt
 
 class Recommender:
     def __init__(self, data_source, processes=4):

@@ -1,108 +1,56 @@
-from queue import Queue
-import urllib.request as request
-import urllib.error
-import json
-import time
+from utils import _progBar, loadFile
 
-def extract_package_json(package_json, q, seen):
-	latest = package_json["dist-tags"]['latest']
+from npm import extract_package_json, crawl_npm
 
-	data = {
-		'name': package_json['name'],
-		'deps': []
-	}
+from github import scrapeRedditForGithub, convertAllGithubToPackages
 
-	try:
-		#skip depricated packages
-		if 'depricated' in package_json['versions'][latest]:
-			return None
+def crawl(github_links=None, package_json=None, print_progress=False, min_usr_deps=4, min_obj_uses=3, pkg_search_factor=1.):
+	print("Crawling for data:")
+	# If no prefecthing has been done
+	if not github_links and not package_json:
+		github_links = scrapeRedditForGithub(True)
+		github_links = convertAllGithubToPackages(github_links, print_progress)
+	# if github links have been extracted, but not the packages
+	elif github_links and not package_json:
+		package_json = convertAllGithubToPackages(github_links, print_progress)
 
-		# Add useful information
-		if 'keywords' in package_json['versions'][latest]:
-			data['keywords'] = package_json['versions'][latest]['keywords']
-
-		if 'description' in package_json['versions'][latest]:
-			data['description'] = package_json['versions'][latest]['description']
-
-		if 'repository' in package_json['versions'][latest]:
-			# Handle different implementations of repository
-			if isinstance(package_json['versions'][latest]['repository'], str):
-				data['repository'] = package_json['versions'][latest]['repository']
-			else:	
-				data['repository'] = package_json['versions'][latest]['repository']['url']
-	except Exception  as e:
-		print("Error trying to parse ->", e)
-		return None
-
-	# extract dependencies
-	if 'dependencies' in package_json['versions'][latest]:
-		for dep in package_json['versions'][latest]['dependencies']:
-			if dep not in data['deps']:
-				# Add another dependency to this package
-				data['deps'].append(dep)
-				if dep not in seen:
-					# Only add non seen packages
-					q.put(dep)
-	
-	# extract dev dependencies
-	if 'devDependencies' in package_json['versions'][latest]:
-		for dep in package_json['versions'][latest]['devDependencies']:
-			if dep not in data['deps']:
-				# Add another dependency to this package
-				data['deps'].append(dep)
-				if dep not in seen:
-					# Only add non seen packages
-					q.put(dep)
-	return data
-
-def crawl_npm(seed_list, max_size=200000):
-	seen = set({})
-	q = Queue()
-	npm_registry = 'http://registry.npmjs.com/'
-
-	for seed in seed_list:
-		q.put(seed)
-
-	data = {}
-
-	counter = 0
-	while counter < max_size and not q.empty():
-		package = q.get()
-		if package in seen:
+	user_pkgs = []
+	# dependency to number of mentions
+	deps = {}
+	i = 0
+	print("Extracting information:")
+	for pack in package_json:
+		if print_progress:
+			_progBar(i, len(package_json), u = 10, l = 20)
+			i += 1
+		#print(pack)
+		extracted = extract_package_json(pack, is_user=True)
+		if not extracted:
 			continue
-
-		# sleep after every 100 downloads
-		if counter % 100 == 0:
-			print("Sleeping...")
-			time.sleep(10)
-
-		print("{:6d} {:6d}".format(counter, q.qsize()),package)
-		
-		counter += 1
-		seen.add(package)
-
-		try:
-			f = request.urlopen(npm_registry + package, timeout=10)
-			package_json = json.load(f)
-		except urllib.error.HTTPError as e:
-			print('The package', package, 'is not found', str(e))
+		if len(extracted['deps']) < min_usr_deps:
 			continue
-
-		try:
-			data_package = extract_package_json(package_json, q, seen)
-			if data_package is not None:
-				data[package] = data_package
+		user_pkgs.append(extracted)
+		for user_dep in extracted['deps']:
+			if user_dep in deps:
+				deps[user_dep] += 1
 			else:
-				# Failed packages should not count towards limit
-				counter -= 1
-		except:
-			# Skip any fails
-			counter -= 1
-	return data
+				deps[user_dep] = 1
+
+	trimmed_deps = []
+	for dep, count in deps.items():
+		#print(dep, count)
+		# Remove uncommon dependents
+		if count >= min_obj_uses:
+			trimmed_deps.append(dep)
+
+	# Remove uncommon dependencies
+	deps = trimmed_deps
+	# Explore based on these deps to retrieve some larger number of packages
+	object_pkgs = crawl_npm(deps, max_size=int(len(deps)*pkg_search_factor))
+
+	return user_pkgs, object_pkgs
 
 if __name__ == "__main__":
-	data = crawl_npm(['express','chalk','supertest', '@prairielearn/prairielib', "ghost"])
-	print("Found", len(data), "packages")
-	with open('data2.json', 'w') as outfile:
-		json.dump(data, outfile)
-	#print(json.dumps(data, indent=4, sort_keys=True))
+	#github_links = loadFile("data/reddit_all_github.txt")
+	package_json = loadFile("data/reddit_all_packages.txt")
+	crawl(package_json=package_json, print_progress=True)
