@@ -191,10 +191,33 @@ if __name__ == '__main__':
             "tmp": "0.0.33"
         }.keys())
 
-    deps = set({
-        "mocha": "^5.11.1",
-        "twitter": ""
-    })
+    deps = {
+        "@turf/turf": "^5.1.6",
+        "body-parser": "^1.18.3",
+        "cookie-parser": "^1.4.4",
+        "dotenv": "^6.2.0",
+        "es6-dynamic-template": "^1.0.5",
+        "express": "^4.16.4",
+        "google-auth-library": "^3.1.0",
+        "mongoose": "^5.4.11",
+        "mongoose-geojson-schema": "^2.1.3",
+        "request": "^2.88.0",
+        "eslint": "^5.14.1",
+        "eslint-config-google": "^0.12.0",
+        "file-system": "^2.2.2",
+        "gulp": "^4.0.0",
+        "gulp-eslint": "^5.0.0",
+        "jest": "^24.1.0",
+        "jest-environment-node": "^24.6.0",
+        "jest-image-snapshot": "^2.8.1",
+        "jest-junit": "^6.3.0",
+        "jest-puppeteer": "^4.1.1",
+        "mongodb-memory-server": "^4.0.1",
+        "nodemon": "^1.18.10",
+        "puppeteer": "^1.14.0",
+        "superagent": "^4.1.0",
+        "supertest": "^3.4.2"
+    }
     pkg = {
         'name': 'test',
         'deps': deps

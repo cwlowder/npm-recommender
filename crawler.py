@@ -4,7 +4,7 @@ from npm import extract_package_json, crawl_npm
 
 from github import scrapeRedditForGithub, convertAllGithubToPackages
 
-def crawl(github_links=None, package_json=None, print_progress=False, min_usr_deps=4, min_obj_uses=3, pkg_search_factor=1.):
+def crawl(github_links=None, package_json=None, print_progress=False, min_usr_deps=3, min_obj_uses=3, pkg_search_factor=1.):
 	print("Crawling for data:")
 	# If no prefecthing has been done
 	if not github_links and not package_json:
