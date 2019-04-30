@@ -25,7 +25,7 @@
 {% else %}
 	<h1>Dependencies you should checkout</h1>
 	{% for res in results %}
-		<div>{{res['dep']}} <b>{{'{:>10.2f}'.format(res['val']*100)}}%</b></div>
+		<div><a href="https://www.npmjs.com/package/{{res['dep']}}">{{res['dep']}}</a> <b>{{'{:>10.2f}'.format(res['val']*100)}}%</b></div>
 	{% endfor %}
 {% endif %}
 
