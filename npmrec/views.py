@@ -1,13 +1,17 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from .forms import UploadFileForm
 
-# Create your views here.
-def simple_upload(request):
-    if request.method == 'POST' and request.FILES['package']:
-        package = request.FILES['package']
-        # fs = FileSystemStorage()
-        # filename = fs.save(myfile.name, myfile)
-        # uploaded_file_url = fs.url(filename)
-        return render(request, 'core/simple_upload.html', {
-            'uploaded_file_url': uploaded_file_url
-        })
-    return render(request, 'core/simple_upload.html')
+
+
+def upload_file(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            # TODO handle form
+            print(form)
+            #handle_uploaded_file(request.FILES['file'])
+            return HttpResponseRedirect('/success/url/')
+    else:
+        form = UploadFileForm()
+    return render(request, 'upload_package.html', {'form': form})
