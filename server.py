@@ -52,7 +52,6 @@ def job_view(ID):
 	if os.path.exists('uploads/'+ID+'/results.json'):
 		done = True
 		results = loadJSON('uploads/'+ID+'/results.json')
-	print(results)
 	return render_template("result.html", ID=ID, dir_exists=dir_exists, results=results, done=done)
 
 @app.route('/<path:path>')
