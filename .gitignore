@@ -105,3 +105,6 @@ venv.bak/
 
 #Private key
 *.prv
+
+#ignore everything in uploads
+uploads/*

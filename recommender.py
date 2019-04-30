@@ -14,7 +14,8 @@ class Recommender:
         self.processes = processes
         counter = 0
         for u_data in self.user_data:
-            u_data['deps'] = set(u_data['deps'])
+            if not isinstance(u_data, set):
+                u_data['deps'] = set(u_data['deps'])
             # Percent of dependencies for this package versus all packages
             u_data['n'] = len(u_data['deps']) / len(self.objects)
             # Add ID field
@@ -77,7 +78,8 @@ class Recommender:
     def recommend(self, pkg, print_progress=False):
         n_a = len(pkg['deps']) / len(self.objects)
         pkg['n'] = n_a
-        pkg['deps'] = set(pkg['deps'])
+        if not isinstance(pkg, set):
+            pkg['deps'] = set(pkg['deps'])
 
         # Build up similarity cache
         sims_cache = {}
