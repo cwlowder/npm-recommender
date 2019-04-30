@@ -1,0 +1,36 @@
+<!doctype html>
+<head>
+	<title>View Result</title>
+	<script type="text/javascript">
+		function load() {
+			setTimeout(function () {
+				window.location.reload();
+			}, 2000);
+		}
+	</script>
+</head>
+
+{% if not ID %}
+	<h1>Please include an ID</h1>
+{% elif not dir_exists %}
+	<h1>Please use a valid Job ID</h1>
+{% elif not done %}
+	<h1>Dependencies you should checkout</h1>
+
+	<div>Waiting for result</div>
+	<script type="text/javascript">
+		// Reload page in a few seconds
+		load()
+	</script>
+{% else %}
+	<h1>Dependencies you should checkout</h1>
+	{% for res in results %}
+		<div>{{res['dep']}} <b>{{'{:>10.2f}'.format(res['val']*100)}}%</b></div>
+	{% endfor %}
+{% endif %}
+
+
+
+
+
+<a href="/">Submit another</a>

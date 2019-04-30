@@ -4,6 +4,7 @@ import subprocess as sp
 
 from npm import extract_package_json
 from worker_pool import addWorkers, addJob, stopWorkers
+from utils import loadJSON
 
 app = Flask(__name__)
 
@@ -35,13 +36,24 @@ def main():
 					file.write(fileContent)
 
 			addJob(fileContent, ID)
-			return app.send_static_file('index.html')
+			return redirect("/job/"+ID, code=302)
 		except Exception as e:
 			# Error occured
 			print("ERROR:", e)
 			return redirect(request.url)
 	else:
 		return app.send_static_file('index.html')
+
+@app.route('/job/<ID>')
+def job_view(ID):
+	dir_exists = os.path.isdir("uploads/"+ID)
+	results = None
+	done = False
+	if os.path.exists('uploads/'+ID+'/results.json'):
+		done = True
+		results = loadJSON('uploads/'+ID+'/results.json')
+	print(results)
+	return render_template("result.html", ID=ID, dir_exists=dir_exists, results=results, done=done)
 
 @app.route('/<path:path>')
 def static_serve(path):
