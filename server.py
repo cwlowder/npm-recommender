@@ -61,4 +61,7 @@ def static_serve(path):
 
 if __name__ == '__main__':
 	addWorkers('data/user_pkgs.txt', 'data/object_pkgs.txt', 'uploads', processes=2)
-	app.run(port=os.environ['HOME'] || 8000)
+	port = 8000
+	if 'PORT' in os.environ:
+		port = int(os.environ['PORT'])
+	app.run(port=port)
