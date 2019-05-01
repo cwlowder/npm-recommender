@@ -61,7 +61,7 @@ def static_serve(path):
 
 if __name__ == '__main__':
 	addWorkers('data/user_pkgs.txt', 'data/object_pkgs.txt', 'uploads', processes=2)
-	if os.environ.get('ON_HEROKU'):
+	if os.environ.get('PORT'):
 		port = int(os.environ.get('PORT', 17995))
 	else:
 		port = 8000
