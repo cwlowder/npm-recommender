@@ -9,7 +9,7 @@ sudo apt-get install python3-pip
 ```
 Next, git clone this repo somewhere locally and change directory into it
 ```bash
-git@github.com:cwlowder/npm-recommender.git
+git clone git@github.com:cwlowder/npm-recommender.git
 cd npm-recommender
 ```
 Create a [virtual environment](https://www.geeksforgeeks.org/python-virtual-environment/) with some name and activate it
