@@ -4,7 +4,7 @@ import subprocess as sp
 
 from npm import extract_package_json
 from worker_pool import addWorkers, addJob, stopWorkers
-from utils import loadJSON
+from utils import loadJSON, saveJSON
 
 app = Flask(__name__)
 
@@ -19,8 +19,14 @@ def main():
 		if 'file' not in request.files:
 			# Error: No file included
 			return redirect(request.url)
+
+		allow_save = False
+		if request.form.getlist('allow_save'):
+			allow_save = request.form.getlist('allow_save')
+
 		file = request.files['file']
 		fileContent = file.read()
+
 		try:
 			fileContent = json.loads(fileContent.decode('utf-8'))
 
@@ -31,9 +37,8 @@ def main():
 
 			ID = generateID()
 			os.mkdir('uploads/'+ID)
-			if False:
-				with open('uploads/' + ID + '/package.json', 'w+') as file:
-					file.write(fileContent)
+			if allow_save:
+				saveJSON('uploads/' + ID + '/package.json', fileContent)
 
 			addJob(fileContent, ID)
 			return redirect("/job/"+ID, code=302)
@@ -60,6 +65,10 @@ def static_serve(path):
 	return send_from_directory('static/', path)
 
 if __name__ == '__main__':
+	# Check if uploads directory does not yet exist
+	if not os.path.exists('uploads/'):
+		os.mkdir('uploads/');
+
 	addWorkers('data/user_pkgs.txt', 'data/object_pkgs.txt', 'uploads', processes=2)
 
 	port = int(os.environ.get('PORT', 8000))
