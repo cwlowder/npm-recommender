@@ -52,7 +52,7 @@ def crawl(github_links=None, package_json=None, print_progress=False, min_usr_de
 
 if __name__ == "__main__":
 	#github_links = loadFile("data/reddit_all_github.txt")
-	package_json = loadFile("data/reddit_all_packages.txt")
-	user_pkgs, object_pkgs = crawl(package_json=package_json, print_progress=True, pkg_search_factor=1)
+	#package_json = loadFile("data/reddit_all_packages.txt")
+	user_pkgs, object_pkgs = crawl(print_progress=True, pkg_search_factor=1)
 	saveFile("data/user_pkgs.txt", user_pkgs)
 	saveJSON("data/object_pkgs.txt", object_pkgs)
