@@ -1,5 +1,5 @@
 # Description of project
-This project allows for a user to upload their npm [package.json file](https://docs.npmjs.com/files/package.json) and recieve a recomendation using [memory based collaborative filtering](https://en.wikipedia.org/wiki/Collaborative_filtering)
+This project allows for a user to upload their npm [package.json file](https://docs.npmjs.com/files/package.json) and receive a recomendation of what dependencies they should install/look at using [memory based collaborative filtering](https://en.wikipedia.org/wiki/Collaborative_filtering).
 
 ## Installation
 First make sure you have python3 and pip3 installed
