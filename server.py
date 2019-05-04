@@ -60,6 +60,10 @@ def static_serve(path):
 	return send_from_directory('static/', path)
 
 if __name__ == '__main__':
+	# Check if uploads directory does not yet exist
+	if not os.path.exists('uploads/'):
+		os.mkdir('uploads/');
+
 	addWorkers('data/user_pkgs.txt', 'data/object_pkgs.txt', 'uploads', processes=2)
 
 	port = int(os.environ.get('PORT', 8000))
