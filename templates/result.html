@@ -15,7 +15,7 @@
 {% elif not dir_exists %}
 	<h1>Please use a valid Job ID</h1>
 {% elif not done %}
-	<h1>Dependencies you should checkout</h1>
+	<h1>Dependencies you should check out</h1>
 
 	<div>Waiting for result</div>
 	<script type="text/javascript">
@@ -23,7 +23,7 @@
 		load()
 	</script>
 {% else %}
-	<h1>Dependencies you should checkout</h1>
+	<h1>Dependencies you should check out</h1>
 	{% for res in results %}
 		<div><a href="https://www.npmjs.com/package/{{res['dep']}}">{{res['dep']}}</a> <b>{{'{:>10.2f}'.format(res['val']*100)}}%</b></div>
 	{% endfor %}
@@ -32,5 +32,7 @@
 
 
 
-
-<a href="/">Submit another</a>
+<br />
+<form action="/">
+    <input type="submit" value="Submit Another" />
+</form>
