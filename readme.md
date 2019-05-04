@@ -43,6 +43,6 @@ Please note that the crawler:
 * and lastly builds out the object and user files
 The First two steps can be skipped over if you already have those files by setting for the crawl call in crawler.py the optional arguments github_links and package_json. Note that if you set package_json, github_links will be ignored. This is an example of how to load those two files into memory to be passed as arguments:
 ```python
-	github_links = loadFile("data/reddit_all_github.txt")
-	package_json = loadFile("data/reddit_all_packages.txt")
+github_links = loadFile("data/reddit_all_github.txt")
+package_json = loadFile("data/reddit_all_packages.txt")
 ```
