@@ -29,7 +29,7 @@ def getGithubFileContent(user, repo, file):
 def scrapeRedditForGithub(print_progress=False):
     github_links = []
     reddit = praw.Reddit()
-    print("Scraping reddit for github links")
+    print("Scraping reddit for GitHub links:")
     for subreddit in reddit.subreddits.search('github'):
         i = 0
         for post in reddit.subreddit(subreddit.display_name).search('site:github.com', limit=10000):
@@ -38,13 +38,11 @@ def scrapeRedditForGithub(print_progress=False):
                 i += 1
             if not post.is_self and '://github.com' in post.url:
                 github_links.append(post.url)
-                #file.write('%s\n' % post.url)
     return github_links
 
 def convertAllGithubToPackages(all_github, print_progress=False):
     all_packages = []
-    #with open('reddit_all_packages.txt', 'w') as all_packages:
-    print("Extracting package files from github links:")
+    print("Extracting package files from GitHub links:")
     i = 0
     for url in all_github:
         path = urllib.parse.urlparse(url[:-1]).path.split('/')[1:]
@@ -56,7 +54,6 @@ def convertAllGithubToPackages(all_github, print_progress=False):
                 print('{0}/{1}'.format(path[0], path[1]))
             package_json = getGithubFileContent(path[0], path[1], 'package.json')
             if package_json is not None:
-                #print(package_json)
                 all_packages.append(''.join(package_json.split()))
     return all_packages
 
@@ -66,3 +63,4 @@ if __name__ == "__main__":
 
     all_packages = convertAllGithubToPackages(all_github, True)
     print(len(all_packages))
+
