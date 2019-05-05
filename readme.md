@@ -65,8 +65,8 @@ When a request is recieved, it is processed using the same package information e
 
 ## Contributions
 * Curtis
-..* Collabortive Filtering parrallization
-..* Job queue system
-..* Set up flask
-..* Installization and Implementation documentation
-..* NPM package crawler and extractor
+	* Collabortive Filtering parrallization
+	* Job queue system
+	* Set up flask
+	* Installization and Implementation documentation
+	* NPM package crawler and extractor
