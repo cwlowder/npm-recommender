@@ -48,10 +48,10 @@ package_json = loadFile("data/reddit_all_packages.txt")
 ```
 
 ## Implementation
-This section will detail how the code base works and provide a general overview of all the components. Starting with getting scraping/crawling the web for data and ending at giving the user a recommendation on what dependencies they should install/look at
+This section will detail how the code base works and provide a general overview of all the components. Starting with scraping/crawling the web for data and ending at giving the user a recommendation on what dependencies they should install/look at
 ### Crawling the web
-Our project's recommendation algorithm requires that we have examples of packag.json files to compare against. Inorder to do this at sufficient scale, we crawl reddit for github links and convert those github links to package.json files. The steps of the process are as follows:
-1. Using praw, we find all subreddits related to the term github
+Our project's recommendation algorithm requires that we have examples of packag.json files to compare against. In order to do this at sufficient scale, we crawl reddit for github links and convert those github links to package.json files. The steps of the process are as follows:
+1. Using [praw](https://praw.readthedocs.io/en/latest/), we find all subreddits related to the term github
 2. Then we search those subreddits for links to github repos.
 3. Then we check to see if those github repos contain package.json files and download them.
 4. We make sure that this package.json file is properly formatted and extract the information that we need from it and store it in a list of these packages.
