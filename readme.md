@@ -64,9 +64,9 @@ This project is written in python3 using the flask framework. It hosts two main 
 When a request is recieved, it is processed using the same package information extracting code the crawler uses and a unique id is generated. This extracted package object is then placed in a job queue to be processed by a pool of some number of workers. When a worker recieves the package, it will run collaboritive filtering using the user and object packages crawled from before. Similarities between the retrieved package and all the user packages are precomputed, and then the [memory based collaborative filtering](https://en.wikipedia.org/wiki/Collaborative_filtering) algorithm is parallized over some number of processors. When the worker is finished, it finds the top X, usually 10, best recommendations of objects, which for this project are dependencies. The worker than places these results in a queue which is then picked up by another worker to save these results to disk.
 
 ## Contributions
-* Curtis Lowder
-** Collabortive Filtering parrallization
-** Job queue system
-** Set up flask
-** Installization and Implementation documentation
-** NPM package crawler and extractor
+* Curtis
+..* Collabortive Filtering parrallization
+..* Job queue system
+..* Set up flask
+..* Installization and Implementation documentation
+..* NPM package crawler and extractor
