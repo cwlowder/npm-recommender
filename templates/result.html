@@ -1,38 +1,51 @@
 <!doctype html>
+<html lang="en">
 <head>
-	<title>View Result</title>
-	<script type="text/javascript">
-		function load() {
-			setTimeout(function () {
-				window.location.reload();
-			}, 2000);
-		}
-	</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>NPM Recommender – Results</title>
+    <script type="text/javascript">
+        function load() {
+            setTimeout(function () {
+                window.location.reload();
+            }, 2000);
+        }
+    </script>
 </head>
-
+<body>
+    <div class="container mt-5">
+        <div class="col-6 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">
 {% if not ID %}
-	<h1>Please include an ID</h1>
+                        Please include an ID!
 {% elif not dir_exists %}
-	<h1>Please use a valid Job ID</h1>
-{% elif not done %}
-	<h1>Dependencies you should check out</h1>
-
-	<div>Waiting for result</div>
-	<script type="text/javascript">
-		// Reload page in a few seconds
-		load()
-	</script>
+                        Please use a valid job ID!
 {% else %}
-	<h1>Dependencies you should check out</h1>
-	{% for res in results %}
-		<div><a href="https://www.npmjs.com/package/{{res['dep']}}">{{res['dep']}}</a> <b>{{'{:>10.2f}'.format(res['val']*100)}}%</b></div>
-	{% endfor %}
+                        Dependencies you should check out
 {% endif %}
+                    </h3>
+                    <div>
+{% if done %}
+    {% for res in results %}
+                        <div><a href="https://www.npmjs.com/package/{{res['dep']}}">{{res['dep']}}</a> <b>{{'{:>10.2f}'.format(res['val']*100)}}%</b></div>
+    {% endfor %}
+                        <form action="/">
+                            <input type="submit" value="Submit another" class="btn btn-secondary mt-3">
+                        </form>
+{% else %}
+                        <div>Waiting for results...</div>
+                        <script type="text/javascript">load()</script>
+{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-
-
-
-<br />
-<form action="/">
-    <input type="submit" value="Submit Another" />
-</form>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
