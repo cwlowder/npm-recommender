@@ -18,7 +18,7 @@ def main():
 		root_dir = os.path.dirname(os.getcwd())
 		if 'file' not in request.files:
 			# Error: No file included
-			return redirect(request.url)
+			return redirect("/error.html", code=302)
 
 		allow_save = False
 		if request.form.getlist('allow_save'):
@@ -45,7 +45,7 @@ def main():
 		except Exception as e:
 			# Error occured
 			print("ERROR:", e)
-			return redirect(request.url)
+			return redirect("/error.html", code=302)
 	else:
 		return app.send_static_file('index.html')
 
