@@ -58,8 +58,8 @@ def convertAllGithubToPackages(all_github, print_progress=False):
     return all_packages
 
 if __name__ == "__main__":
-    #all_github = scrapeRedditForGithub()
-    all_github = loadFile("data/reddit_all_github.txt")
+    all_github = scrapeRedditForGithub()
+    # all_github = loadFile("data/reddit_all_github.txt")
 
     all_packages = convertAllGithubToPackages(all_github, True)
     print(len(all_packages))
