@@ -24,7 +24,7 @@ Create a [virtual environment](https://www.geeksforgeeks.org/python-virtual-envi
 
 ```bash
 virtualenv env_name
-source env_name/bin_activate
+source env_name/bin/activate
 ```
 
 Install dependencies

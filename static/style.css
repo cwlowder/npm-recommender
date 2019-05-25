@@ -1,0 +1,32 @@
+.fa {
+  padding: 5px;
+  font-size: 20px;
+  width: 27px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 50%;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  background-image: url("https://www.publicdomainpictures.net/pictures/250000/velka/abstract-background-colors.jpg");
+  background-repeat: no-repeat;
+}
+
+.fa:hover {
+  box-shadow: 0 0px 8px 0 rgba(0,0,0,0.6);
+  opacity: 0.9;
+}
+
+.fa-github {
+  background: #111111;
+  color: white;
+}
+
+.bottomright {
+  position: absolute;
+  bottom: 8px;
+  right: 16px;
+  font-size: 18px;
+}
