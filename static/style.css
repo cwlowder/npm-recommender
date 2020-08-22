@@ -7,10 +7,11 @@
   border-radius: 50%;
 }
 
+// https://www.publicdomainpictures.net/pictures/250000/velka/abstract-background-colors.jpg
 body {
   height: 100%;
   width: 100%;
-  background-image: url("https://www.publicdomainpictures.net/pictures/250000/velka/abstract-background-colors.jpg");
+  background-image: url("/colorful.png");
   background-repeat: no-repeat;
 }
 
