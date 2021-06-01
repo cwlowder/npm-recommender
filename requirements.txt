@@ -13,6 +13,6 @@ requests==2.21.0
 six==1.12.0
 sqlparse==0.3.0
 update-checker==0.16
-urllib3==1.24.2
+urllib3==1.26.5
 websocket-client==0.56.0
 Werkzeug==0.16.0
